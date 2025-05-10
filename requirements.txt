@@ -10,4 +10,4 @@ six==1.17.0
 tzdata==2025.2
 urllib3>=2.4.0
 argparse
-pdfminer.six>=20250506
+pdfminer.six

@@ -28,7 +28,7 @@ BANK_ACCOUNT_PROMPT = """The given pdf is a bank statement. Extract transactions
 Only output the CSV and no other explanations.
 """
 
-PDF_CREDITCARD_RE = re.compile(r"creditcard.*(visa|mastercard)", re.IGNORECASE | re.DOTALL | re.MULTILINE)
+PDF_CREDITCARD_RE = re.compile(r"credit\s*card.*(visa|mastercard)", re.IGNORECASE | re.DOTALL | re.MULTILINE)
 
 def pdf_to_csv(prompt: str, file_path: str, force: bool = False) -> bool:
   """Convert a PDF file to CSV using the Gemini API.
@@ -69,10 +69,12 @@ def pdf_to_csv(prompt: str, file_path: str, force: bool = False) -> bool:
 
 def contains_card_type(file_path: str) -> bool:
   text = pdfminer.high_level.extract_text(file_path)
-  if PDF_CREDITCARD_RE.search(text):
-    print("Found credit card statement in {}".format(file_path))
-  else:
-    print("Found bank statement in {}".format(file_path))
+  # print ("Text: ", text)
+  # if PDF_CREDITCARD_RE.search(text):
+  #   print("Found credit card statement in {}".format(file_path))
+  # else:
+  #   print("Found bank statement in {}".format(file_path))
+  # sys.exit(0)
   return PDF_CREDITCARD_RE.search(text)
 
 def acct_pdf2csv(files: list[str],  force: bool = False) -> None:

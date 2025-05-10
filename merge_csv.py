@@ -77,7 +77,7 @@ def rbc_chequing(dfs: list[DataFrame], base_dir: str = "."):
   if len(df) == 0: return
 
 # remove trailing slashes in the base_dir filename and replace leading "." with empty string
-  output_filename = f"{base_dir.rstrip("/")}_chequing.csv".replace(" ", "_")
+  output_filename = f"{base_dir.rstrip("/")}_account.csv"
   df.to_csv(output_filename, index=False)
 
 
