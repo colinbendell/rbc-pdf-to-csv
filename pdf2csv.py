@@ -28,63 +28,71 @@ BANK_ACCOUNT_PROMPT = """The given pdf is a bank statement. Extract transactions
 Only output the CSV and no other explanations.
 """
 
-PDF_CREDITCARD_RE = re.compile(r"credit\s*card.*(visa|mastercard)", re.IGNORECASE | re.DOTALL | re.MULTILINE)
+PDF_CREDITCARD_RE = re.compile(
+    r"credit\s*card.*(visa|mastercard)", re.IGNORECASE | re.DOTALL | re.MULTILINE
+)
+
 
 def pdf_to_csv(prompt: str, file_path: str, force: bool = False) -> bool:
-  """Convert a PDF file to CSV using the Gemini API.
-  Args:
-      prompt (str): The prompt to use for the Gemini API.
-      file_path (str): The path to the PDF file.
-      force (bool): Whether to force overwrite the CSV file if it already exists.
-  Returns:
-      bool: True if the conversion was successful, False if the CSV file already exists.
-  """
+    """Convert a PDF file to CSV using the Gemini API.
+    Args:
+        prompt (str): The prompt to use for the Gemini API.
+        file_path (str): The path to the PDF file.
+        force (bool): Whether to force overwrite the CSV file if it already exists.
+    Returns:
+        bool: True if the conversion was successful, False if the CSV file already exists.
+    """
 
-  out_csv = file_path.removesuffix(".pdf") + ".csv"
-  if not force and os.path.exists(out_csv):
-    return False
-  model = "gemini-2.0-flash"
-  api_url = "https://generativelanguage.googleapis.com/v1beta/models/{}:generateContent?key={}".format(
-      model, mysecrets.GEMINI_API_KEY)
-  parts = [{"text": prompt}]
-  with open(file_path, "rb") as fp:
-    data = str(base64.b64encode(fp.read()), "utf-8")
-    parts.append({"inlineData": {"mimeType": "application/pdf", "data": data}})
-  body = {
-      "contents": [{
-          "parts": parts,
-      }],
-  }
-  resp = requests.post(api_url, json=body)
-  resp = json.loads(resp.text)
-  texts = []
-  for candidate in resp.get("candidates", []):
-    for part in candidate.get("content", {}).get("parts", []):
-      texts.append(part.get("text", "").strip())
-  text = "\n".join(texts).removeprefix("```csv").removesuffix("```")
-  with open(out_csv, "w") as ofp:
-    ofp.write(text)
-  return True
+    out_csv = file_path.removesuffix(".pdf") + ".csv"
+    if not force and os.path.exists(out_csv):
+        return False
+    model = "gemini-2.0-flash"
+    api_url = "https://generativelanguage.googleapis.com/v1beta/models/{}:generateContent?key={}".format(
+        model, mysecrets.GEMINI_API_KEY
+    )
+    parts = [{"text": prompt}]
+    with open(file_path, "rb") as fp:
+        data = str(base64.b64encode(fp.read()), "utf-8")
+        parts.append({"inlineData": {"mimeType": "application/pdf", "data": data}})
+    body = {
+        "contents": [
+            {
+                "parts": parts,
+            }
+        ],
+    }
+    resp = requests.post(api_url, json=body)
+    resp = json.loads(resp.text)
+    texts = []
+    for candidate in resp.get("candidates", []):
+        for part in candidate.get("content", {}).get("parts", []):
+            texts.append(part.get("text", "").strip())
+    text = "\n".join(texts).removeprefix("```csv").removesuffix("```")
+    with open(out_csv, "w") as ofp:
+        ofp.write(text)
+    return True
 
 
 def contains_card_type(file_path: str) -> bool:
-  text = pdfminer.high_level.extract_text(file_path)
-  # print ("Text: ", text)
-  # if PDF_CREDITCARD_RE.search(text):
-  #   print("Found credit card statement in {}".format(file_path))
-  # else:
-  #   print("Found bank statement in {}".format(file_path))
-  # sys.exit(0)
-  return PDF_CREDITCARD_RE.search(text)
+    text = pdfminer.high_level.extract_text(file_path)
+    # print ("Text: ", text)
+    # if PDF_CREDITCARD_RE.search(text):
+    #   print("Found credit card statement in {}".format(file_path))
+    # else:
+    #   print("Found bank statement in {}".format(file_path))
+    # sys.exit(0)
+    return PDF_CREDITCARD_RE.search(text)
 
-def acct_pdf2csv(files: list[str],  force: bool = False) -> None:
-  for i, pdf in enumerate(files):
-    print("Processing {}/{}: {}.".format(i + 1, len(files), pdf))
-    prompt = CREDIT_CARD_PROMPT if contains_card_type(pdf) else BANK_ACCOUNT_PROMPT
-    if pdf_to_csv(prompt=prompt, file_path=pdf, force=force):
-      print("-- Ok")
-    else:
-      print("-- Skipped")
+
+def acct_pdf2csv(files: list[str], force: bool = False) -> None:
+    for i, pdf in enumerate(files):
+        print("Processing {}/{}: {}.".format(i + 1, len(files), pdf))
+        prompt = CREDIT_CARD_PROMPT if contains_card_type(pdf) else BANK_ACCOUNT_PROMPT
+        if pdf_to_csv(prompt=prompt, file_path=pdf, force=force):
+            print("-- Ok")
+        else:
+            print("-- Skipped")
+
 
 def main(args):
     parser = argparse.ArgumentParser()
@@ -106,13 +114,19 @@ def main(args):
     args = parser.parse_args()
     force = args.force
     pdf_files = [f for f in args.pdf_files if os.path.isfile(f)]
-    pdf_files += [f for d in args.pdf_files if os.path.isdir(d) for f in glob.glob(d + "/**/*.pdf", recursive=True)]
+    pdf_files += [
+        f
+        for d in args.pdf_files
+        if os.path.isdir(d)
+        for f in glob.glob(d + "/**/*.pdf", recursive=True)
+    ]
 
     if len(pdf_files) == 0:
-      print("No PDF files found.")
-      return 1
+        print("No PDF files found.")
+        return 1
     pdf_files.sort()
     acct_pdf2csv(files=pdf_files, force=force)
+
 
 if __name__ == "__main__":
     sys.exit(main(sys.argv))
