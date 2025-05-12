@@ -146,6 +146,8 @@ def main(args):
         print("No PDF files found.")
         return 1
 
+    csv_files.sort()
+
     # iterate through all the csv files and resolve the nearest common parent directory
     base_dir = os.path.dirname(csv_files[0])
     for f in csv_files:
