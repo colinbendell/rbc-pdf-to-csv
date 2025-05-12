@@ -1,15 +1,30 @@
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.13"
+# dependencies = [
+#    "certifi",
+#    "numpy",
+#    "pandas",
+#    "requests",
+#    "argparse",
+#    "pdfminer.six",
+#    "pdf2image (>=1.17.0,<2.0.0)",
+# ]
+# ///
+
 import argparse
 import json
 import base64
 import requests
 import os
 import sys
-import mysecrets
 import glob
 import re
 import pdfminer.high_level
 import io
 from pdf2image import convert_from_path
+
+import mysecrets
 
 CREDIT_CARD_PROMPT = """The given file is a credit statement. Extract transactions as a CSV with the following columns:
   - "Transaction Date" with values in the format yyyy/mm/dd. Get the year from the line "Statement from month day, year to month day, year".
@@ -30,11 +45,17 @@ BANK_ACCOUNT_PROMPT = """As an expert accountant, extract transactions from the 
 Only output the CSV and no other explanations.
 """
 
-PDF_CREDITCARD_RE = re.compile(
-    r"credit\s*card.*(visa|mastercard)", re.IGNORECASE | re.DOTALL | re.MULTILINE
-)
+PDF_CREDITCARD_RE = re.compile(r"credit\s*card.*(visa|mastercard)", re.IGNORECASE | re.DOTALL | re.MULTILINE)
 
-def pdf_to_long_png_bytes(pdf_path: str) -> bytes:
+def pdf_to_png(pdf_path: str) -> bytes:
+    """Convert a PDF file to PNG format using pdf2image. The output is a high resolution single PNG image.
+
+    Args:
+        pdf_path (str): path to the PDF to convert
+
+    Returns:
+        bytes: png image of the pdf file
+    """
     # Convert PDF pages to a list of PIL Image objects
     images = convert_from_path(pdf_path, dpi=600, fmt="png", single_file=True)
 
@@ -44,17 +65,17 @@ def pdf_to_long_png_bytes(pdf_path: str) -> bytes:
     return buffer.getvalue()
 
 
-def pdf_to_csv(prompt: str, file_path: str, force: bool = False) -> bool:
+def pdf_to_csv(prompt: str, pdf_path: str, force: bool = False) -> bool:
     """Convert a PDF file to CSV using the Gemini API.
     Args:
         prompt (str): The prompt to use for the Gemini API.
-        file_path (str): The path to the PDF file.
+        pdf_path (str): The path to the PDF file.
         force (bool): Whether to force overwrite the CSV file if it already exists.
     Returns:
         bool: True if the conversion was successful, False if the CSV file already exists.
     """
 
-    out_csv = file_path.removesuffix(".pdf") + ".csv"
+    out_csv = pdf_path.removesuffix(".pdf") + ".csv"
     if not force and os.path.exists(out_csv):
         return False
     model = "gemini-2.0-flash"
@@ -62,7 +83,7 @@ def pdf_to_csv(prompt: str, file_path: str, force: bool = False) -> bool:
         model, mysecrets.GEMINI_API_KEY
     )
     parts = [{"text": prompt}]
-    bytes = pdf_to_long_png_bytes(file_path)
+    bytes = pdf_to_png(pdf_path)
     data = str(base64.b64encode(bytes), "utf-8")
     parts.append({"inlineData": {"mimeType": "image/png", "data": data}})
     body = {
@@ -76,35 +97,27 @@ def pdf_to_csv(prompt: str, file_path: str, force: bool = False) -> bool:
     resp = json.loads(resp.text)
     texts = []
     for candidate in resp.get("candidates", []):
-        print ("Candidate: ", candidate)
         for part in candidate.get("content", {}).get("parts", []):
             texts.append(part.get("text", "").strip())
     text = "\n".join(texts).removeprefix("```csv").removesuffix("```")
-    print ("Text: ", text)
     with open(out_csv, "w") as ofp:
         ofp.write(text)
     return True
 
 
-def contains_card_type(file_path: str) -> bool:
-    text = pdfminer.high_level.extract_text(file_path)
-    # print ("Text: ", text)
-    # if PDF_CREDITCARD_RE.search(text):
-    #   print("Found credit card statement in {}".format(file_path))
-    # else:
-    #   print("Found bank statement in {}".format(file_path))
-    # sys.exit(0)
+def contains_card_type(pdf_path: str) -> bool:
+    text = pdfminer.high_level.extract_text(pdf_path)
     return PDF_CREDITCARD_RE.search(text)
 
 
 def acct_pdf2csv(files: list[str], force: bool = False) -> None:
-    for i, pdf in enumerate(files):
-        print("Processing {}/{}: {}.".format(i + 1, len(files), pdf))
-        prompt = CREDIT_CARD_PROMPT if contains_card_type(pdf) else BANK_ACCOUNT_PROMPT
-        if pdf_to_csv(prompt=prompt, file_path=pdf, force=force):
-            print("-- Ok")
+    for i, pdf_path in enumerate(files):
+        print("Processing {}/{}: {}.".format(i + 1, len(files), pdf_path), end='', flush=True)
+        prompt = CREDIT_CARD_PROMPT if contains_card_type(pdf_path) else BANK_ACCOUNT_PROMPT
+        if pdf_to_csv(prompt=prompt, pdf_path=pdf_path, force=force):
+            print("✅ Done")
         else:
-            print("-- Skipped")
+            print("⏭️ Skipping")
 
 
 def main(args):

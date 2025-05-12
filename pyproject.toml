@@ -1,0 +1,31 @@
+[project]
+name = "rbc-pdf-to-csv"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Colin Bendell",email = "colin@bendell.ca"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "certifi",
+    "charset-normalizer",
+    "idna",
+    "numpy",
+    "pandas",
+    "python-dateutil",
+    "pytz",
+    "requests",
+    "six",
+    "tzdata",
+    "urllib3",
+    "argparse",
+    "pdfminer.six",
+    "pdf2image (>=1.17.0,<2.0.0)",
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
