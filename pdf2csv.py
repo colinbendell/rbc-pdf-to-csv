@@ -9,7 +9,6 @@ import glob
 import re
 import pdfminer.high_level
 import io
-from PIL import Image
 from pdf2image import convert_from_path
 
 CREDIT_CARD_PROMPT = """The given file is a credit statement. Extract transactions as a CSV with the following columns:
@@ -21,11 +20,11 @@ CREDIT_CARD_PROMPT = """The given file is a credit statement. Extract transactio
 Only output the CSV and no other explanations.
 """
 
-BANK_ACCOUNT_PROMPT = """As an expert accountant, extract transactions from the given bank statement as a CSV with the following columns:
+BANK_ACCOUNT_PROMPT = """As an expert accountant, extract transactions from the provided bank statement. Columns are right justified. Produce a CSV with the following columns:
   - "Date" with values in the format yyyy/mm/dd. Get the year from the line "Account statement from month day, year to month day, year".
   - "Description" with values inside double quotes. Do not include any `"` or `,` in the value. Include the foreign currency and value in paranthensis with the exchange rate prefixed with ` @ ` if available inside the double quotes.
   - "Withdrawals" (also might be called "Cheques & Debits"). Format the values as float with two decimal places. Do not put `$` or `,` in the value.
-  - "Deposit" (also might be called "Credits" or the column next to the "balance" column). Format the values as float with two decimal places. Do not put `$` or `,` in the value.
+  - "Deposit" (also might be called "Credits" or the column just to the left of the "balance" column). Format the values as float with two decimal places. Do not put `$` or `,` in the value.
   - "Balance" with values formatted as float with two decimal places. Do not put `$` or `,` in the value.
 
 Only output the CSV and no other explanations.
@@ -37,25 +36,11 @@ PDF_CREDITCARD_RE = re.compile(
 
 def pdf_to_long_png_bytes(pdf_path: str) -> bytes:
     # Convert PDF pages to a list of PIL Image objects
-    images = convert_from_path(pdf_path, dpi=300, fmt="png", single_file=True)
-
-    print (f"Numer of pages: {len(images)}")
-
-    # Calculate the total height and maximum width for the combined image
-    total_height = sum(img.height for img in images)
-    max_width = max(img.width for img in images)
-
-    # Create a new blank image with a white background
-    combined_image = Image.new("RGB", (max_width, total_height), color="white")
-
-    current_y = 0
-    for img in images:
-        combined_image.paste(img, (0, current_y))
-        current_y += img.height
+    images = convert_from_path(pdf_path, dpi=600, fmt="png", single_file=True)
 
     # Save the combined image to a bytes buffer
     buffer = io.BytesIO()
-    combined_image.save(buffer, format="PNG")
+    images[0].save(buffer, format="PNG")
     return buffer.getvalue()
 
 
@@ -91,9 +76,11 @@ def pdf_to_csv(prompt: str, file_path: str, force: bool = False) -> bool:
     resp = json.loads(resp.text)
     texts = []
     for candidate in resp.get("candidates", []):
+        print ("Candidate: ", candidate)
         for part in candidate.get("content", {}).get("parts", []):
             texts.append(part.get("text", "").strip())
     text = "\n".join(texts).removeprefix("```csv").removesuffix("```")
+    print ("Text: ", text)
     with open(out_csv, "w") as ofp:
         ofp.write(text)
     return True
