@@ -1,28 +1,28 @@
-Date,Description,Amount,Balance
-2025-03-21,Online transfer received-7463,2000.0,18454.29
-2025-03-26,Misc Payment Hydro Ottawa,-83.7,18370.59
-2025-03-26,Automobile Rent SUBARU FINANCE,-801.49,17569.1
-2025-03-28,Online transfer received-6933,2000.0,19569.1
-2025-03-31,Online transfer received - 9149,1243.0,20812.1
-2025-03-31,CIARA MACRORY MEDICINE,0.0,
-2025-03-31,e-Transfer sent Jennifer 5ANA9J,-20.0,
-2025-03-31,e-Transfer sent Sarah Ashton LZS49C,-21.21,
-2025-03-31,e-Transfer sent Theresa MacRory 95B5BA,-3750.0,
-2025-03-31,Online Transfer to Deposit Account-8436,-10000.0,
-2025-03-31,Online Banking transfer - 8071,-2744.9,4275.99
-2025-04-01,Insurance RBCINS-LIFE,-198.84,
-2025-04-01,Misc Payment MANULIFE 147042,-292.69,
-2025-04-01,Misc Payment OCSCC 691,-532.0,
-2025-04-03,Mortgage BNC,-2791.72,460.74
-2025-04-03,Online Banking transfer-8949,5000.0,5460.74
-2025-04-03,e-Transfer sent Matthew Smith P8HBSS,-30.0,5430.74
-2025-04-04,Online transfer received-1086,2000.0,7430.74
-2025-04-07,Personal Loan NBC/LINE OF CR,-395.6,7035.14
-2025-04-08,Utility Bill Pmt Enbridge Gas,-176.37,6858.77
-2025-04-11,Online transfer received 4748,2000.0,8858.77
-2025-04-14,e-Transfer- Autodeposit Kelty Martin 53d5b5c644c44ac540b0389034123f22,60.0,8918.77
-2025-04-14,e-Transfer sent Marianne YS9DDT,-200.0,
-2025-04-14,e-Transfer sent asteven V7JVKV,-260.0,
-2025-04-14,e-Transfer sent Brendan MacRory CTM7DP,-420.0,
-2025-04-14,e-Transfer sent Brendan MacRory 2D6HT2,-850.0,
-2025-04-14,Online Banking transfer-2467,-593.2,
+Date,File,Description,Amount
+2025-03-21,personal_chequing_multi_page.pdf,Online transfer received-7463,2000.0
+2025-03-26,personal_chequing_multi_page.pdf,Misc Payment Hydro Ottawa,-83.7
+2025-03-26,personal_chequing_multi_page.pdf,Automobile Rent SUBARU FINANCE,-801.49
+2025-03-28,personal_chequing_multi_page.pdf,Online transfer received-6933,2000.0
+2025-03-31,personal_chequing_multi_page.pdf,Online transfer received - 9149,1243.0
+2025-03-31,personal_chequing_multi_page.pdf,CIARA MACRORY MEDICINE,0.0
+2025-03-31,personal_chequing_multi_page.pdf,e-Transfer sent Jennifer 5ANA9J,-20.0
+2025-03-31,personal_chequing_multi_page.pdf,e-Transfer sent Sarah Ashton LZS49C,-21.21
+2025-03-31,personal_chequing_multi_page.pdf,e-Transfer sent Theresa MacRory 95B5BA,-3750.0
+2025-03-31,personal_chequing_multi_page.pdf,Online Transfer to Deposit Account-8436,-10000.0
+2025-03-31,personal_chequing_multi_page.pdf,Online Banking transfer - 8071,-2744.9
+2025-04-01,personal_chequing_multi_page.pdf,Insurance RBCINS-LIFE,-198.84
+2025-04-01,personal_chequing_multi_page.pdf,Misc Payment MANULIFE 147042,-292.69
+2025-04-01,personal_chequing_multi_page.pdf,Misc Payment OCSCC 691,-532.0
+2025-04-03,personal_chequing_multi_page.pdf,Mortgage BNC,-2791.72
+2025-04-03,personal_chequing_multi_page.pdf,Online Banking transfer-8949,5000.0
+2025-04-03,personal_chequing_multi_page.pdf,e-Transfer sent Matthew Smith P8HBSS,-30.0
+2025-04-04,personal_chequing_multi_page.pdf,Online transfer received-1086,2000.0
+2025-04-07,personal_chequing_multi_page.pdf,Personal Loan NBC/LINE OF CR,-395.6
+2025-04-08,personal_chequing_multi_page.pdf,Utility Bill Pmt Enbridge Gas,-176.37
+2025-04-11,personal_chequing_multi_page.pdf,Online transfer received 4748,2000.0
+2025-04-14,personal_chequing_multi_page.pdf,e-Transfer- Autodeposit Kelty Martin 53d5b5c644c44ac540b0389034123f22,60.0
+2025-04-14,personal_chequing_multi_page.pdf,e-Transfer sent Marianne YS9DDT,-200.0
+2025-04-14,personal_chequing_multi_page.pdf,e-Transfer sent asteven V7JVKV,-260.0
+2025-04-14,personal_chequing_multi_page.pdf,e-Transfer sent Brendan MacRory CTM7DP,-420.0
+2025-04-14,personal_chequing_multi_page.pdf,e-Transfer sent Brendan MacRory 2D6HT2,-850.0
+2025-04-14,personal_chequing_multi_page.pdf,Online Banking transfer-2467,-593.2

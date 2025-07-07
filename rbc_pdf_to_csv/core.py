@@ -34,6 +34,8 @@ class PDFProcessor:
             df.rename(columns={"Activity Description": "Description"}, inplace=True)
 
         df["Description"] = df["Description"].apply(sanitize_description)
+
+        df = df[["Transaction Date", "Posting Date", "File", "Description", "Amount"]]
         return df
 
     def process_bank_statement(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -52,13 +54,12 @@ class PDFProcessor:
         df["Description"] = df["Description"].apply(sanitize_description)
 
         df["Amount"] = (df["Withdrawals"] * -1.0) + df["Deposit"]
-        df.drop(columns=["Withdrawals", "Deposit"], inplace=True)
-        df = df[["Date", "Description", "Amount", "Balance"]]
 
         # Filter out rows that include "Opening or Closing Balance" in the description
         df = df[~df["Description"].str.contains("opening balance", na=False, case=False)]
         df = df[~df["Description"].str.contains("Closing balance", na=False, case=False)]
 
+        df = df[["Date", "File", "Description", "Amount"]]
         return df
 
     def process_pdf(self, pdf_path: str, out_csv: Optional[str] = None) -> str:
@@ -87,6 +88,9 @@ class PDFProcessor:
         except Exception as e:
             # Retry with more lenient parsing
             df = pd.read_csv(StringIO(csv_text), on_bad_lines='warn', engine='python')
+
+        # add a column with a static value on all rows
+        df["File"] = os.path.basename(pdf_path)
 
         if statement.is_credit_card():
             df = self.process_credit_card_statement(df)
