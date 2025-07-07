@@ -1,0 +1,22 @@
+```csv
+Date,"Description",Withdrawals,Deposit,Balance
+2023/04/03,"Misc Payment PAY-FILE FEES",2.00,,137104.94
+2023/04/03,"Monthly fee",6.00,,137102.94
+2023/04/03,"Electronic transaction fee 9 Drs @ 0.75 2 Crs @ 0.75",8.25,,137088.69
+2023/04/05,"Online Banking transfer - 5693",10.36,,
+2023/04/05,"Investment MD Financial",5000.00,,132078.33
+2023/04/10,"Online transfer sent - 5173",2000.00,,130078.33
+2023/04/11,"Account Payable Pmt WINCHESTER DMH",,2514.52,132592.85
+2023/04/14,"Misc Payment ONTARIO HEALTH",,731.62,
+2023/04/14,"Online transfer sent - 8380",2000.00,,
+2023/04/14,"COMMERCIAL TAXES TXINS 3973910",1677.90,,
+2023/04/14,"COMMERCIAL TAXES TXINS 3939257",64616.47,,65030.10
+2023/04/20,"Misc Payment CMPA-ACPM",180.00,,64850.10
+2023/04/21,"Bill Payment GOV NU PAYABLES",,122.71,
+2023/04/21,"Bill Payment GOV NU PAYABLES",,22350.00,
+2023/04/21,"Online transfer sent - 2965",2000.00,,
+2023/04/27,"Online Banking transfer - 9677",1778.32,,83544.49
+2023/04/27,"Online Banking transfer - 9026",1349.01,,82195.48
+2023/04/28,"Bill Payment GOV NU PAYABLES",,300.00,
+2023/04/28,"Online transfer sent - 0941",2000.00,,80495.48
+```

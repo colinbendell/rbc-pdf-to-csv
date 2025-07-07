@@ -39,10 +39,10 @@ import mysecrets
 CREDIT_CARD_PROMPT = """You are a helpful assistant and an expert accountant. Extract transactions from the provided credit card statement, as if you were reading it naturally. Columns are right justified. Produce a CSV with the following columns:
   - "Transaction Date" with values in the format yyyy/mm/dd. Get the year from the line "Statement from month day, year to month day, year".
   - "Posting Date" with values in the format yyyy/mm/dd. Get the year from the line "Statement from month day, year to month day, year".
-  - "Description" with values inside double quotes. Do not include any `"` or `,` in the value. Include the foreign currency and value in paranthensis with the exchange rate prefixed with ` @ ` if available inside the double quotes.
+  - "Description" with values inside double quotes. Do not include double quotes (`"`) or commas (`,`) in the value. Include the foreign currency and value in paranthensis with the exchange rate prefixed with ` @ ` if available inside the double quotes.
   - "Amount" with values formatted as float with two decimal places. Do not put `$` or `,` in the value.
 
-Only output a valid CSV file with 4 fields and no other explanations.
+Only output a valid CSV file with no other explanations.
 """
 
 BANK_ACCOUNT_PROMPT = """You are a helpful assistant and an expert accountant. Extract transactions from the provided bank statement, as if you were reading it naturally. Columns are right justified. Produce a CSV with the following columns:
@@ -103,8 +103,6 @@ def pdf_to_png(pdf_path: str) -> bytes:
     # merge all the images into a single image
     if len(images) == 0:
         raise ValueError("No images found in the PDF file.")
-    if len(images) == 1:
-        return images[0].tobytes()
     # Create a new image with the total height of all images and the width of the first image
     total_height = sum(image.height for image in images)
     width = images[0].width
@@ -115,6 +113,8 @@ def pdf_to_png(pdf_path: str) -> bytes:
         combined_image.paste(image, (0, y_offset))
         y_offset += image.height
 
+    # save the combined image to a file
+    combined_image.save(pdf_path.removesuffix(".pdf") + ".combined.png", format="PNG")
     # Save the combined image to a bytes buffer
     buffer = io.BytesIO()
     combined_image.save(buffer, format="PNG")
@@ -151,6 +151,10 @@ def pdf_to_csv(prompt: str, pdf_path: str, force: bool = False) -> str:
     for candidate in resp.get("candidates", []):
         for part in candidate.get("content", {}).get("parts", []):
             texts.append(part.get("text", "").strip())
+    raw_text = "\n".join(texts)
+    # safe the raw text to a file
+    with open(pdf_path.removesuffix(".pdf") + ".raw.txt", "w") as ofp:
+        ofp.write(raw_text)
     text = "\n".join(texts).removeprefix("```csv").removesuffix("```")
     return text
 

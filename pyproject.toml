@@ -1,7 +1,7 @@
 [project]
 name = "rbc-pdf-to-csv"
 version = "0.1.0"
-description = ""
+description = "Convert RBC bank and credit card PDF statements to CSV format using AI"
 authors = [
     {name = "Colin Bendell",email = "colin@bendell.ca"}
 ]
@@ -25,7 +25,65 @@ dependencies = [
     "pdf2image (>=1.17.0,<2.0.0)",
 ]
 
+[project.optional-dependencies]
+test = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "pytest-mock>=3.10.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-xdist>=3.0.0",
+]
+
+[project.scripts]
+rbc-pdf-to-csv = "rbc_pdf_to_csv.cli:main"
+convert-rbc = "rbc_pdf_to_csv.cli:main"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "-n=auto",
+    "-v",
+    "-s",
+    "--maxfail=1",
+#    "--cov=rbc_pdf_to_csv",
+#    "--cov-report=term-missing",
+#    "--cov-report=html",
+]
+
+[tool.coverage.run]
+source = ["rbc_pdf_to_csv"]
+omit = [
+    "*/tests/*",
+    "*/test_*",
+    "*/__pycache__/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4.1",
+    "pytest-asyncio>=1.0.0",
+    "pytest-cov>=6.2.1",
+    "pytest-mock>=3.14.1",
+    "pytest-xdist>=3.0.0",
+]
