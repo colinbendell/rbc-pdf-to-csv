@@ -1,17 +1,17 @@
-Date,Description,Amount,Balance
-2024-09-03,Misc Payment PAY-FILE FEES,-2.0,76701.37
-2024-09-03,Monthly fee,-6.0,76699.37
-2024-09-04,Online Banking transfer - 9891,-834.22,76693.37
-2024-09-05,Investment MD Financial,-5000.0,75859.15
-2024-09-06,Online transfer sent - 1104,-2000.0,70859.15
-2024-09-12,Misc Payment DBA REBATE CDE PROMOTION,6.0,68859.15
-2024-09-13,Bill Payment GOV NU PAYABLES,1600.0,68865.15
-2024-09-13,Account Payable Pmt WINCHESTER DMH,2978.5,0.0
-2024-09-13,Misc Payment ONTARIO HEALTH,9523.44,0.0
-2024-09-17,Online transfer sent - 5855,-2000.0,80967.09
-2024-09-17,Bill Payment GOV NU PAYABLES,199.2,0.0
-2024-09-17,Bill Payment GOV NU PAYABLES,34130.0,115296.29
-2024-09-20,Online transfer sent - 4479,-2000.0,0.0
-2024-09-20,Misc Payment CMPA-ACPM,-374.0,112922.29
-2024-09-27,Bill Payment GOV NU PAYABLES,735.0,0.0
-2024-09-27,Online transfer sent - 5918,-2000.0,111657.29
+Date,File,Description,Amount
+2024-09-03,business_chequing_multi_line.pdf,Misc Payment PAY-FILE FEES,-2.0
+2024-09-03,business_chequing_multi_line.pdf,Monthly fee,-6.0
+2024-09-04,business_chequing_multi_line.pdf,Online Banking transfer - 9891,-834.22
+2024-09-05,business_chequing_multi_line.pdf,Investment MD Financial,-5000.0
+2024-09-06,business_chequing_multi_line.pdf,Online transfer sent - 1104,-2000.0
+2024-09-12,business_chequing_multi_line.pdf,Misc Payment DBA REBATE CDE PROMOTION,6.0
+2024-09-13,business_chequing_multi_line.pdf,Bill Payment GOV NU PAYABLES,1600.0
+2024-09-13,business_chequing_multi_line.pdf,Account Payable Pmt WINCHESTER DMH,2978.5
+2024-09-13,business_chequing_multi_line.pdf,Misc Payment ONTARIO HEALTH,9523.44
+2024-09-17,business_chequing_multi_line.pdf,Online transfer sent - 5855,-2000.0
+2024-09-17,business_chequing_multi_line.pdf,Bill Payment GOV NU PAYABLES,199.2
+2024-09-17,business_chequing_multi_line.pdf,Bill Payment GOV NU PAYABLES,34130.0
+2024-09-20,business_chequing_multi_line.pdf,Online transfer sent - 4479,-2000.0
+2024-09-20,business_chequing_multi_line.pdf,Misc Payment CMPA-ACPM,-374.0
+2024-09-27,business_chequing_multi_line.pdf,Bill Payment GOV NU PAYABLES,735.0
+2024-09-27,business_chequing_multi_line.pdf,Online transfer sent - 5918,-2000.0

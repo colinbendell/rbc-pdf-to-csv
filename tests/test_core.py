@@ -32,6 +32,8 @@ class TestCore:
         raw_text = raw_text.removeprefix("```csv").removesuffix("```")
 
         df = pd.read_csv(StringIO(raw_text))
+        # Add the File column as the core processing expects it
+        df["File"] = pdf_path.name
         processor = PDFProcessor()
         processed_df = processor.process_credit_card_statement(df)
 
@@ -59,6 +61,8 @@ class TestCore:
         raw_text = raw_text.removeprefix("```csv").removesuffix("```")
 
         df = pd.read_csv(StringIO(raw_text))
+        # Add the File column as the core processing expects it
+        df["File"] = pdf_path.name
         processor = PDFProcessor()
         processed_df = processor.process_bank_statement(df)
 
