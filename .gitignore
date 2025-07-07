@@ -1,5 +1,12 @@
 .venv
+.pytest_cache
+.gradio
+htmlcov
+coverage.xml
+.coverage
 __pycache__
-*.csv
-*.pdf
 mysecrets.py
+samples/*.pdf
+samples/*.pdf2
+samples/*.png
+uv.lock

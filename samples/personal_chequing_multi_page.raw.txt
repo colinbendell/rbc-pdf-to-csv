@@ -1,0 +1,30 @@
+```csv
+Date,Description,Withdrawals,Deposit,Balance
+2025/03/21,"Online transfer received-7463",,2000.00,18454.29
+2025/03/26,"Misc Payment Hydro Ottawa",83.70,,18370.59
+2025/03/26,"Automobile Rent SUBARU FINANCE",801.49,,17569.10
+2025/03/28,"Online transfer received-6933",,2000.00,19569.10
+2025/03/31,"Online transfer received - 9149",,1243.00,20812.10
+2025/03/31,"CIARA MACRORY MEDICINE",,,
+2025/03/31,"e-Transfer sent Jennifer 5ANA9J",20.00,,
+2025/03/31,"e-Transfer sent Sarah Ashton LZS49C",21.21,,
+2025/03/31,"e-Transfer sent Theresa MacRory 95B5BA",3750.00,,
+2025/03/31,"Online Transfer to Deposit Account-8436",10000.00,,
+2025/03/31,"Online Banking transfer - 8071",2744.90,,4275.99
+2025/04/01,"Insurance RBCINS-LIFE",198.84,,
+2025/04/01,"Misc Payment MANULIFE 147042",292.69,,
+2025/04/01,"Misc Payment OCSCC 691",532.00,,
+2025/04/03,"Mortgage BNC",2791.72,,460.74
+2025/04/03,"Online Banking transfer-8949",,5000.00,5460.74
+2025/04/03,"e-Transfer sent Matthew Smith P8HBSS",30.00,,5430.74
+2025/04/04,"Online transfer received-1086",,2000.00,7430.74
+2025/04/07,"Personal Loan NBC/LINE OF CR",395.60,,7035.14
+2025/04/08,"Utility Bill Pmt Enbridge Gas",176.37,,6858.77
+2025/04/11,"Online transfer received 4748",,2000.00,8858.77
+2025/04/14,"e-Transfer- Autodeposit Kelty Martin 53d5b5c644c44ac540b0389034123f22",,60.00,8918.77
+2025/04/14,"e-Transfer sent Marianne YS9DDT",200.00,,
+2025/04/14,"e-Transfer sent asteven V7JVKV",260.00,,
+2025/04/14,"e-Transfer sent Brendan MacRory CTM7DP",420.00,,
+2025/04/14,"e-Transfer sent Brendan MacRory 2D6HT2",850.00,,
+2025/04/14,"Online Banking transfer-2467",593.20,,
+```
