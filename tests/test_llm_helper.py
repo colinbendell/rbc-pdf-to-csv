@@ -3,7 +3,7 @@
 import pytest
 import base64
 from unittest.mock import patch, MagicMock, mock_open
-from io import BytesIO
+from io import StringIO
 
 from rbc_pdf_to_csv.llm_helper import LLMHelper
 
@@ -111,8 +111,8 @@ class TestLLMHelper:
     def test_prompt_invalid_data_type(self):
         """Test prompting with invalid data type raises ValueError."""
         helper = LLMHelper("test-key")
-        with pytest.raises(ValueError, match="data must be bytes, list of bytes, tuple of \\(bytes, str\\), or list of \\(bytes, str\\) tuples"):
-            helper.prompt("test prompt", "invalid data")
+        with pytest.raises(ValueError, match="data must be None, bytes, list of bytes, tuple of \\(bytes, str\\), or list of \\(bytes, str\\) tuples"):
+            helper.prompt("test prompt", StringIO("invalid data"))
 
     @patch("rbc_pdf_to_csv.llm_helper.requests.post")
     def test_prompt_with_csv_markers(self, mock_post):

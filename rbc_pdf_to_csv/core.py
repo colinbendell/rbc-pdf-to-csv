@@ -7,6 +7,8 @@ from typing import List, Optional
 import pandas as pd
 
 from .bank_statement import BankStatement
+from .llm_helper import LLMHelper
+from .prompts import CATEGORIZATION_PROMPT
 from .utils import clean_date_column, sanitize_description
 
 
@@ -62,12 +64,48 @@ class PDFProcessor:
         df = df[["Date", "File", "Description", "Amount"]]
         return df
 
-    def process_pdf(self, pdf_path: str, out_csv: Optional[str] = None) -> str:
+    def categorize_transactions(self, csv_path: str, training_data_csv: str) -> str:
+        """Categorize transactions in a CSV file using LLM.
+
+        Args:
+            csv_path: Path to the CSV file with transactions
+            sample_categories_path: Path to the sample categories CSV file
+
+        Returns:
+            Path to the categorized CSV file
+        """
+        # Read the transaction CSV
+        with open(csv_path, 'r') as f:
+            transactions_csv = f.read()
+
+        # Read the sample categories CSV
+        with open(training_data_csv, 'r') as f:
+            categories_csv = f.read()
+
+        # Create the prompt with both CSVs
+        prompt = f"{CATEGORIZATION_PROMPT}\n\nReference categories:\n{categories_csv}\n\nTransactions to categorize:\n{transactions_csv}"
+
+        # Get categorized CSV from LLM
+        try:
+            categorized_csv = LLMHelper.prompt(prompt, None)  # No image data needed for text-only prompt
+            # Clean up the response by removing markdown code blocks if present
+            categorized_csv = categorized_csv.removeprefix("```csv").removeprefix("```").removesuffix("```").strip()
+        except Exception as e:
+            raise RuntimeError(f"Failed to categorize transactions: {e}")
+
+        # Write the categorized CSV back to the same file
+        with open(csv_path, 'w') as f:
+            f.write(categorized_csv)
+
+        return csv_path
+
+    def process_pdf(self, pdf_path: str, out_csv: Optional[str] = None, training_data_csv: Optional[str] = None) -> str:
         """Process a single PDF file and convert to CSV.
 
         Args:
             pdf_path: Path to the PDF file
             out_csv: Path to the output CSV file (defaults to pdf_path.csv)
+            training_data_csv: Path to the training data CSV file (defaults to sample-categories.csv)
 
         Returns:
             Path to the generated CSV file
@@ -98,4 +136,13 @@ class PDFProcessor:
             df = self.process_bank_statement(df)
 
         df.to_csv(out_csv, index=False)
+
+        if training_data_csv is not None:
+            # Add categorization step
+            try:
+                self.categorize_transactions(out_csv, training_data_csv)
+            except Exception as e:
+                # Log the error but don't fail the entire process
+                print(f"Warning: Failed to categorize transactions: {e}")
+
         return out_csv

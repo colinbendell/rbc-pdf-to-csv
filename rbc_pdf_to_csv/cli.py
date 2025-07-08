@@ -9,24 +9,26 @@ from typing import List
 from .core import PDFProcessor
 
 
-def find_pdf_files(paths: List[str]) -> List[str]:
-    """Find PDF files from the given paths.
+def find_files(paths: List[str], extension: str = "pdf") -> List[str]:
+    """Find files with the given extension from the given paths.
 
     Args:
         paths: List of file or directory paths
+        extension: File extension to search for (without the dot)
 
     Returns:
-        List of PDF file paths
+        List of file paths with the specified extension
     """
-    pdf_files = []
+    files = []
 
     for path in paths:
         if os.path.isfile(path):
-            pdf_files.append(path)
+            if path.lower().endswith(f".{extension.lower()}"):
+                files.append(path)
         elif os.path.isdir(path):
-            pdf_files.extend(glob.glob(os.path.join(path, "**/*.pdf"), recursive=True))
+            files.extend(glob.glob(os.path.join(path, f"**/*.{extension}"), recursive=True))
 
-    return sorted(pdf_files)
+    return sorted(files)
 
 
 def main(args: List[str] = None) -> int:
@@ -54,7 +56,21 @@ def main(args: List[str] = None) -> int:
         )
 
         parser.add_argument(
-            "pdf_files",
+            "-c",
+            "--categorize-only",
+            action="store_true",
+            help="Categorize existing CSV file(s) with a Category column using the LLM. If no files specified, finds all CSV files in current directory and subdirectories."
+        )
+
+        parser.add_argument(
+            "-t",
+            "--training-data",
+            default=None,
+            help="Path to the training data CSV file to use for categorization"
+        )
+
+        parser.add_argument(
+            "files",
             default=glob.glob("**/*.pdf", recursive=True),
             nargs="*",
             help="Input PDF statements (default: **/*.pdf)",
@@ -62,13 +78,31 @@ def main(args: List[str] = None) -> int:
 
         parsed_args = parser.parse_args(args)
 
-        pdf_files = find_pdf_files(parsed_args.pdf_files)
+        processor = PDFProcessor()
+
+        # If --categorize-only is used, process those CSVs and exit
+        if parsed_args.categorize_only:
+            csv_files = find_files(parsed_args.files, "csv")
+
+            if len(csv_files) == 0:
+                print("No CSV files found.")
+                return 2
+
+            for i, csv_path in enumerate(csv_files):
+                print(f"Categorizing {i + 1}/{len(csv_files)}: {csv_path}...", end='', flush=True)
+                try:
+                    processor.categorize_transactions(csv_path, parsed_args.training_data)
+                    print("✅ Done")
+                except Exception as e:
+                    print(f"❌ Error: {e}")
+                    return 1
+            return 0
+
+        pdf_files = find_files(parsed_args.files, "pdf")
 
         if len(pdf_files) == 0:
             print("No PDF files found.")
             return 2
-
-        processor = PDFProcessor()
 
         for i, pdf_path in enumerate(pdf_files):
             print(f"Processing {i + 1}/{len(pdf_files)}: {pdf_path}.", end='', flush=True)
@@ -79,7 +113,7 @@ def main(args: List[str] = None) -> int:
                     print("⏭️ Skipping")
                     continue
 
-                processor.process_pdf(pdf_path, out_csv=out_csv)
+                processor.process_pdf(pdf_path, out_csv=out_csv, training_data_csv=parsed_args.training_data)
                 print("✅ Done")
             except Exception as e:
                 print(f"❌ Error: {e}")
