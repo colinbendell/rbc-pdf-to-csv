@@ -3,6 +3,7 @@
 import argparse
 import glob
 import os
+import traceback
 import sys
 from typing import List
 
@@ -110,7 +111,7 @@ def main(args: List[str] = None) -> int:
             return 2
 
         for i, pdf_path in enumerate(pdf_files):
-            print(f"Processing {i + 1}/{len(pdf_files)}: {pdf_path}.", end='', flush=True)
+            print(f"Processing {i + 1}/{len(pdf_files)}: {os.path.basename(pdf_path)}.", end='', flush=True)
 
             try:
                 out_csv = pdf_path.removesuffix(".pdf") + ".csv"
@@ -122,6 +123,7 @@ def main(args: List[str] = None) -> int:
                 print("✅ Done")
             except Exception as e:
                 print(f"❌ Error: {e}")
+                print(f"Traceback: {traceback.format_exc()}")
                 return 1
 
         return 0

@@ -1,6 +1,7 @@
 """Core PDF processing functionality."""
 
 import os
+import time
 from io import StringIO
 from typing import List, Optional
 
@@ -11,6 +12,9 @@ from .llm_helper import LLMHelper
 from .prompts import CATEGORIZATION_PROMPT
 from .utils import clean_date_column, sanitize_description
 
+# CSV retry configuration constants
+CSV_MAX_RETRIES = 3
+CSV_RETRY_DELAY = 3  # seconds
 
 class PDFProcessor:
     """Main class for processing PDF statements and converting to CSV."""
@@ -121,17 +125,27 @@ class PDFProcessor:
         # Create BankStatement instance for this PDF
         statement = BankStatement(pdf_path, self._debug)
 
+        # Get CSV text from LLM (only once to avoid retrying on network errors)
         try:
             csv_text = statement.pdf_to_csv()
         except Exception as e:
-            raise RuntimeError(f"Failed to convert PDF {pdf_path}: {e}")
+            raise RuntimeError(f"Failed to get CSV from LLM: {e}")
 
-        try:
-            df = pd.read_csv(StringIO(csv_text))
-        except Exception as e:
-            # Retry with more lenient parsing
-            csv_text = statement.pdf_to_csv()
-            df = pd.read_csv(StringIO(csv_text))
+        # Retry logic for CSV parsing errors only
+        last_error = None
+        for attempt in range(CSV_MAX_RETRIES + 1):
+            try:
+                if csv_text is None:
+                    csv_text = statement.pdf_to_csv()
+                df = pd.read_csv(StringIO(csv_text))
+                break
+            except Exception as e:
+                if attempt >= CSV_MAX_RETRIES:
+                    raise
+                delay = CSV_RETRY_DELAY * (2 ** attempt)
+                csv_text = None
+                print(f"\n ... retrying in {delay}s (bad CSV) #{attempt + 1}/{CSV_MAX_RETRIES}", end='', flush=True)
+                time.sleep(delay)
 
         # add a column with a static value on all rows
         df["File"] = os.path.basename(pdf_path)
