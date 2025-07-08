@@ -30,9 +30,14 @@ CREDIT_CARD_PDFS = [
 
 BANK_ACCOUNT_PDFS = [
     "samples/business_chequing_multi_line.pdf",
+    "samples/business_savings_opening.pdf",
+    "samples/business_savings.pdf",
     "samples/personal_chequing_multi_page_2.pdf",
     "samples/personal_chequing_multi_page_3.pdf",
     "samples/personal_chequing_multi_page.pdf",
+    "samples/personal_savings_multi_line.pdf",
+    "samples/personal_savings_multi_page.pdf",
+    "samples/personal_savings_year_roll.pdf",
 ]
 
 ALL_PDFS = CREDIT_CARD_PDFS + BANK_ACCOUNT_PDFS

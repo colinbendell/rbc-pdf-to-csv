@@ -2,6 +2,7 @@
 
 import base64
 import json
+import os
 from typing import Optional, Union, List, Tuple
 
 import requests
@@ -19,9 +20,9 @@ class LLMHelper:
         Args:
             api_key: Gemini API key. If None, uses mysecrets.GEMINI_API_KEY
         """
-        self.api_key = api_key or mysecrets.GEMINI_API_KEY
+        self.api_key = api_key or mysecrets.GEMINI_API_KEY or os.getenv("GEMINI_API_KEY")
         self.model = "gemini-2.0-flash"
-        self.api_url = f"https://generativelanguage.googleapis.com/v1beta/models/{self.model}:generateContent?key={self.api_key}"
+        self.api_url = f"https://generativelanguage.googleapis.com/v1/models/{self.model}:generateContent?key={self.api_key}"
 
     @classmethod
     def initialize(cls, api_key: Optional[str] = None) -> 'LLMHelper':

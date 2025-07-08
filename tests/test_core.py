@@ -23,7 +23,7 @@ class TestCore:
         if not raw_text_path.exists():
             raise RuntimeError(f"Expected source text file not found for {pdf_path.name}")
 
-        out_csv = pdf_path.with_suffix(".csv")
+        out_csv = pdf_path.with_suffix(".processed.csv")
         if not out_csv.exists():
             raise RuntimeError(f"Expected output CSV file not found for {pdf_path.name}")
 

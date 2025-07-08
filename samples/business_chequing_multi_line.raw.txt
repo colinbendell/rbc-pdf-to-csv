@@ -1,5 +1,5 @@
 ```csv
-Date,Description,Withdrawals,Deposit,Balance
+Date,"Description",Withdrawals,Deposit,Balance
 2024/09/03,"Misc Payment PAY-FILE FEES",2.00,0.00,76701.37
 2024/09/03,"Monthly fee",6.00,0.00,76699.37
 2024/09/04,"Online Banking transfer - 9891",834.22,0.00,76693.37

@@ -1,30 +1,43 @@
 """AI prompts for different types of financial statements."""
 
-CREDIT_CARD_PROMPT = """You are a helpful assistant and an expert accountant. Extract transactions from the provided credit card statement, as if you were reading it naturally. Columns are right justified. Produce a CSV with the following columns:
+CREDIT_CARD_PROMPT = """You are a helpful assistant and an expert book keeper. Your task is to read the provided credit card statement naturally and extract all the transactions details.
+
+I will provide you with a credit card statement.Your job is to produce a CSV that extracts all the transactions.
+
+Guidelines for transactions:
+- A line separates the transaction rows - don't mix the details from one transaction with another
+- Special attention should be paid to the "Amount" column. This must be exact and correct
+
+The following columns should be present in the output CSV:
   - "Transaction Date" with values in the format yyyy/mm/dd. Get the year from the line "Statement from month day, year to month day, year".
   - "Posting Date" with values in the format yyyy/mm/dd. Get the year from the line "Statement from month day, year to month day, year".
   - "Description" with values inside double quotes. Do not include any `"` or `,` in the value. Include the foreign currency and value in paranthensis with the exchange rate prefixed with ` @ ` if available inside the double quotes.
   - "Amount" with values formatted as float with two decimal places. Do not put `$` or `,` in the value.
 
+Double check each transaction row to verify the description and amount are correct.
+
 Only output a valid CSV file with 4 fields and no other explanations.
 """
 
-BANK_ACCOUNT_PROMPT = """You are a helpful assistant and an expert accountant. Your task is to read the provided bank statements naturally and extract transactions.
-
-I will provide you with a bank statement.
-
-Your job is to produce a CSV that extracts all the transactions.
+BANK_ACCOUNT_PROMPT = """You are a helpful assistant and an expert book keeper. Your task is to read the provided bank statements and create a CSV of all the transactions.
 
 Guidelines for transactions:
 - columns are right justified, this is useful when determining which column a field belongs to
-- Remove all double quotes (`"`), commas (`,`) and dollar symbols (`$`)
+- there is a line between each transaction row, do not mix the details from one transaction with another
 
 The following columns should be present in the output CSV:
   - "Date" with values in the format yyyy/mm/dd. Get the year from the line "Account statement from month day, year to month day, year".
-  - "Description" with values inside double quotes. Do not include any `"` or `,` in the value. Include the foreign currency and value in paranthensis with the exchange rate prefixed with ` @ ` if available inside the double quotes.
-  - "Withdrawals" (also might be called "Cheques & Debits"). Format the values as float with two decimal places. Do not put `$` or `,` in the value.
-  - "Deposit" (also might be called "Credits" or the column just to the left of the "balance" column). Format the values as float with two decimal places. Do not put `$` or `,` in the value.
-  - "Balance" with values formatted as float with two decimal places. Do not put `$` or `,` in the value.
+  - "Description" with values inside double quotes
+    - Remove any `"` or `,` in the value
+    - Include the foreign currency and value in paranthensis with the exchange rate prefixed with ` @ ` if available inside the double quotes.
+  - "Withdrawals" (also called "Cheques & Debits")
+    - Format the values as float with two decimal places
+    - Remove all the `$` and `,` from the value.
+  - "Deposit" (also called "Credits" or the column just to the left of the "balance" column)
+    - Format the values as float with two decimal places
+    - Remove all the `$` and `,` from the value.
+  - "Balance" with values formatted as float with two decimal places.
+    - Remove all the `$` and `,` from the value.
 
 Only output a valid CSV file with 5 fields and no other explanations.
 """

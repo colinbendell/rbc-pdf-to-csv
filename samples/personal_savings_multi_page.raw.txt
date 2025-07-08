@@ -1,0 +1,8 @@
+```csv
+"Date","Description","Withdrawals","Deposit","Balance"
+"2023/09/21","Online Banking payment - 6989 CRA-REV TX OWI","20000.00","","26854.73"
+"2023/09/21","Fee Electronic transaction 1 @ $5.00","5.00","","6849.73"
+"2023/10/03","Deposit interest","","25.41","6875.14"
+"2023/10/11","Online Banking transfer - 9470","","1000.00","7875.14"
+"2023/10/12","Online Transfer to Deposit Account-1823","6000.00","","1875.14"
+```

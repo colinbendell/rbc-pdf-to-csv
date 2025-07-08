@@ -70,6 +70,12 @@ def main(args: List[str] = None) -> int:
         )
 
         parser.add_argument(
+            "--debug",
+            action="store_true",
+            help="Enable debug mode which saves artifacts along with the output CSV",
+        )
+
+        parser.add_argument(
             "files",
             default=glob.glob("**/*.pdf", recursive=True),
             nargs="*",
@@ -77,8 +83,7 @@ def main(args: List[str] = None) -> int:
         )
 
         parsed_args = parser.parse_args(args)
-
-        processor = PDFProcessor()
+        processor = PDFProcessor(parsed_args.debug)
 
         # If --categorize-only is used, process those CSVs and exit
         if parsed_args.categorize_only:

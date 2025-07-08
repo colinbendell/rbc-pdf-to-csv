@@ -1,22 +1,19 @@
 ```csv
 Date,"Description",Withdrawals,Deposit,Balance
-2023/01/03,"Opening balance",,0.00,138012.75
-2023/01/03,"Misc Payment PAY-FILE FEES",2.00,0.00,138010.75
-2023/01/03,"Monthly fee",6.00,0.00,
-2023/01/03,"Electronic transaction fee 7 Drs @ 0.75
-2 Crs @ 0.75",6.75,0.00,137998.00
-2023/01/05,"Investment MD Financial",5000.00,0.00,132998.00
-2023/01/06,"Online transfer sent - 2067",2000.00,0.00,130998.00
-2023/01/12,"Account Payable Pmt WINCHESTER DMH",0.00,2695.42,133693.42
-2023/01/13,"Bill Payment GOV NU PAYABLES",0.00,25362.50,
-2023/01/13,"Misc Payment ONTARIO HEALTH",0.00,4759.48,
-2023/01/19,"Online transfer sent - 5235",2000.00,0.00,161815.40
-2023/01/19,"e-Transfer sent Adam Jones-Delcorde",646.39,0.00,161167.51
-2023/01/19,"INTERAC e-Transfer fee",1.50,0.00,
-2023/01/19,"Online Banking transfer - 4518",2051.77,0.00,159115.74
-2023/01/20,"Online transfer sent - 8546",2000.00,0.00,
-2023/01/20,"Misc Payment CMPA-ACPM",180.00,0.00,156935.74
-2023/01/27,"Online transfer sent - 1757",2000.00,0.00,154935.74
-2023/01/31,"Online Banking transfer - 2307",2328.90,0.00,152606.84
-2023/01/31,"Closing balance",0.00,0.00,152606.84
+2023/01/03,"Misc Payment PAY-FILE FEES",2.00,,138012.75
+2023/01/03,"Monthly fee",6.00,,138010.75
+2023/01/03,"Electronic transaction fee 7 Drs @ 0.75 2 Crs @ 0.75",6.75,,137998.00
+2023/01/05,"Investment MD Financial",5000.00,,132998.00
+2023/01/06,"Online transfer sent - 2067",2000.00,,130998.00
+2023/01/12,"Account Payable Pmt WINCHESTER DMH",,2695.42,133693.42
+2023/01/13,"Bill Payment GOV NU PAYABLES",,25362.50,
+2023/01/13,"Misc Payment ONTARIO HEALTH",,4759.48,161815.40
+2023/01/19,"Online transfer sent - 5235",2000.00,,
+2023/01/19,"e-Transfer sent Adam Jones-Delcorde",646.39,,161167.51
+2023/01/19,"INTERAC e-Transfer fee",1.50,,
+2023/01/19,"Online Banking transfer - 4518",2051.77,,159115.74
+2023/01/20,"Online transfer sent - 8546",2000.00,,156935.74
+2023/01/20,"Misc Payment CMPA-ACPM",180.00,,
+2023/01/27,"Online transfer sent - 1757",2000.00,,154935.74
+2023/01/31,"Online Banking transfer - 2307",2328.90,,152606.84
 ```

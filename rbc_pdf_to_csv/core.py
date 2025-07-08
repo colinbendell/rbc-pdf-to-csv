@@ -15,6 +15,11 @@ from .utils import clean_date_column, sanitize_description
 class PDFProcessor:
     """Main class for processing PDF statements and converting to CSV."""
 
+    _debug: bool = False
+
+    def __init__(self, debug: bool = False):
+        self._debug = debug
+
     def process_credit_card_statement(self, df: pd.DataFrame) -> pd.DataFrame:
         """Process credit card statement DataFrame.
 
@@ -114,7 +119,7 @@ class PDFProcessor:
             out_csv = pdf_path.removesuffix(".pdf") + ".csv"
 
         # Create BankStatement instance for this PDF
-        statement = BankStatement(pdf_path)
+        statement = BankStatement(pdf_path, self._debug)
 
         try:
             csv_text = statement.pdf_to_csv()
@@ -125,7 +130,8 @@ class PDFProcessor:
             df = pd.read_csv(StringIO(csv_text))
         except Exception as e:
             # Retry with more lenient parsing
-            df = pd.read_csv(StringIO(csv_text), on_bad_lines='warn', engine='python')
+            csv_text = statement.pdf_to_csv()
+            df = pd.read_csv(StringIO(csv_text))
 
         # add a column with a static value on all rows
         df["File"] = os.path.basename(pdf_path)
@@ -136,6 +142,9 @@ class PDFProcessor:
             df = self.process_bank_statement(df)
 
         df.to_csv(out_csv, index=False)
+
+        if self._debug:
+            df.to_csv(out_csv.removesuffix(".csv") + ".processed.csv", index=False)
 
         if training_data_csv is not None:
             # Add categorization step
