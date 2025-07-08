@@ -49,12 +49,13 @@ class LLMHelper:
             cls._instance = cls(api_key)
         return cls._instance
 
-    def send_prompt(self, prompt_text: str, data: Union[bytes, List[bytes], Tuple[bytes, str], List[Tuple[bytes, str]]]) -> str:
+    def send_prompt(self, prompt_text: str, data: Union[bytes, List[bytes], Tuple[bytes, str], List[Tuple[bytes, str]], None] = None) -> str:
         """Internal implementation of prompt functionality.
 
         Args:
             prompt_text: The text prompt to send to the API
             data: Can be one of:
+                - None: Text-only prompt (no data)
                 - bytes: Single image/data bytes (assumes image/png)
                 - List[bytes]: Multiple image/data bytes (assumes image/png for all)
                 - Tuple[bytes, str]: Single bytes with mimetype
@@ -70,7 +71,10 @@ class LLMHelper:
         parts = [{"text": prompt_text}]
 
         # Handle different input types
-        if isinstance(data, bytes):
+        if data is None:
+            # Text-only prompt, no data to add
+            data_list = []
+        elif isinstance(data, bytes):
             # Single bytes object - assume image/png
             data_list = [(data, "image/png")]
         elif isinstance(data, list):
@@ -84,7 +88,7 @@ class LLMHelper:
             # Single (bytes, mimetype) tuple
             data_list = [data]
         else:
-            raise ValueError("data must be bytes, list of bytes, tuple of (bytes, str), or list of (bytes, str) tuples")
+            raise ValueError("data must be None, bytes, list of bytes, tuple of (bytes, str), or list of (bytes, str) tuples")
 
         # Add all data parts
         for item_bytes, mimetype in data_list:
@@ -114,12 +118,13 @@ class LLMHelper:
 
         return "\n".join(texts)
 
-    def prompt(self, prompt_text: str, data: Union[bytes, List[bytes], Tuple[bytes, str], List[Tuple[bytes, str]]]) -> str:
+    def prompt(self, prompt_text: str, data: Union[bytes, List[bytes], Tuple[bytes, str], List[Tuple[bytes, str]], None] = None) -> str:
         """Send a prompt to the Gemini API with optional data.
 
         Args:
             prompt_text: The text prompt to send to the API
             data: Can be one of:
+                - None: Text-only prompt (no data)
                 - bytes: Single image/data bytes (assumes image/png)
                 - List[bytes]: Multiple image/data bytes (assumes image/png for all)
                 - Tuple[bytes, str]: Single bytes with mimetype
@@ -135,12 +140,13 @@ class LLMHelper:
         return self.send_prompt(prompt_text, data)
 
     @classmethod
-    def prompt(cls, prompt_text: str, data: Union[bytes, List[bytes], Tuple[bytes, str], List[Tuple[bytes, str]]], api_key: Optional[str] = None) -> str:
+    def prompt(cls, prompt_text: str, data: Union[bytes, List[bytes], Tuple[bytes, str], List[Tuple[bytes, str]], None] = None, api_key: Optional[str] = None) -> str:
         """Send a prompt to the Gemini API with optional data. Auto-initializes the singleton if needed.
 
         Args:
             prompt_text: The text prompt to send to the API
             data: Can be one of:
+                - None: Text-only prompt (no data)
                 - bytes: Single image/data bytes (assumes image/png)
                 - List[bytes]: Multiple image/data bytes (assumes image/png for all)
                 - Tuple[bytes, str]: Single bytes with mimetype

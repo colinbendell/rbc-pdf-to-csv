@@ -4,6 +4,8 @@ import pandas as pd
 import pytest
 from pandas.testing import assert_frame_equal
 from io import StringIO
+import tempfile
+import os
 
 from rbc_pdf_to_csv.core import PDFProcessor
 
@@ -70,6 +72,49 @@ class TestCore:
         processed_df.to_csv(result_csv, index=False)
         assert expected_csv == result_csv.getvalue()
 
+    def test_categorize_transactions(self):
+        """Test that transaction categorization works correctly."""
+        processor = PDFProcessor()
+
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.csv', delete=False) as f:
+            f.write("""Description,Amount,Category
+STARBUCKS 16466 OTTAWA ON,-6.50,Food
+LOBLAWS 82.2 NEPEAN ON,-57.80,Food
+BELL CANADA (OB) MONTREAL QC,-123.74,Food""")
+            temp_category_training_csv = f.name
+
+        # Create a temporary CSV file with sample transactions
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.csv', delete=False) as f:
+            f.write("""Date,Description,Amount,File
+2024-01-01,STARBUCKS 16466 OTTAWA ON,-6.50,test.pdf
+2024-01-02,LOBLAWS 82.2 NEPEAN ON,-57.80,test.pdf
+2024-01-03,BELL CANADA (OB) MONTREAL QC,-123.74,test.pdf""")
+            temp_csv_path = f.name
+
+        try:
+            # Test categorization
+            result_path = processor.categorize_transactions(temp_csv_path, temp_category_training_csv)
+
+            # Verify the file was updated
+            assert result_path == temp_csv_path
+
+            # Read the categorized CSV and check for Category column
+            df = pd.read_csv(temp_csv_path)
+            assert "Category" in df.columns
+
+            # Verify the original columns are still there
+            assert "Date" in df.columns
+            assert "Description" in df.columns
+            assert "Amount" in df.columns
+            assert "File" in df.columns
+
+        finally:
+            # Clean up
+            if os.path.exists(temp_csv_path):
+                os.unlink(temp_csv_path)
+            if os.path.exists(temp_category_training_csv):
+                os.unlink(temp_category_training_csv)
+
     # def test_csv_structure_validation(self, samples_dir):
     #     """Test that all sample CSV files have the correct structure."""
     #     csv_files = list(samples_dir.glob("*.csv"))
@@ -125,7 +170,7 @@ class TestCore:
 
     #         # Parse both to compare structure
     #         raw_df = pd.read_csv(BytesIO(raw_text.removeprefix("```csv").removesuffix("```").encode()))
-    #         expected_df = pd.read_csv(BytesIO(expected_csv.encode()))
+    #         raw_df = pd.read_csv(BytesIO(expected_csv.encode()))
 
     #         # The processed CSV should have the same number of rows
     #         assert len(raw_df) == len(expected_df), "Row count mismatch"
