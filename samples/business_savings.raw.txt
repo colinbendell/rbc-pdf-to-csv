@@ -1,0 +1,4 @@
+```csv
+Date,Description,Withdrawals,Deposit,Balance
+2025/06/02,"Deposit interest",,81.11,50083.73
+```

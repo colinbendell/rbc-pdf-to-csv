@@ -1,0 +1,7 @@
+```csv
+Date,"Description",Withdrawals,Deposit,Balance
+2024/05/27,"Online Banking payment - 6271 OTTAWA-TAX",2993.11,0.00,7964.94
+2024/05/27,"Fee Electronic transaction 1  @ $5.00",5.00,0.00,4059.06
+2024/06/03,"Online Banking transfer - 0141",3905.88,0.00,4074.15
+2024/06/03,"Deposit interest",0.00,15.09,4074.15
+```

@@ -1,0 +1,6 @@
+```csv
+Date,"Description",Withdrawals,Deposit,Balance
+2024/12/13,"Opening Balance",,,3931.18
+2024/12/30,"Online Banking transfer - 4950",1185.61,,2745.57
+2025/01/02,"Deposit interest",,3.44,2749.01
+```

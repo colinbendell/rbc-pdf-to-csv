@@ -18,18 +18,19 @@ Image.MAX_IMAGE_PIXELS = None
 class BankStatement:
     """Handles PDF to image conversion and AI processing for bank statements."""
 
+    _account_type: Optional[AccountType] = None
+    _debug: bool = False
     _png_bytes: Optional[bytes] = None
+    _pdf_bytes: Optional[bytes] = None
 
-    def __init__(self, pdf_path: str):
+    def __init__(self, pdf_path: str, debug: bool = False):
         """Initialize the bank statement processor.
 
         Args:
             pdf_path: Path to the PDF file
         """
         self.pdf_path = pdf_path
-
-        # Detect and store the account type
-        self._account_type = None
+        self._debug = debug
 
     @property
     def account_type(self) -> AccountType:
@@ -41,6 +42,15 @@ class BankStatement:
         if self._account_type is None:
             self._account_type = self._detect_account_type()
         return self._account_type
+
+    @property
+    def pdf_bytes(self) -> bytes:
+        """Get the PDF file as bytes.
+        """
+        if self._pdf_bytes is None:
+            with open(self.pdf_path, "rb") as f:
+                self._pdf_bytes = f.read()
+        return self._pdf_bytes
 
     def _detect_account_type(self) -> AccountType:
         """Detect the type of account from PDF content.
@@ -64,11 +74,12 @@ class BankStatement:
         """
         return self.account_type == AccountType.CREDIT_CARD
 
-    def pdf_to_png(self) -> bytes:
+    @property
+    def png_bytes(self) -> bytes:
         """Convert the PDF file to PNG format using pdf2image.
 
         Returns:
-            PNG image bytes of the PDF file
+            A combined PNG image bytes for all pages of the PDF file
 
         Raises:
             ValueError: If no images found in PDF
@@ -96,10 +107,14 @@ class BankStatement:
                 combined_image.paste(image, (0, y_offset))
                 y_offset += image.height
 
-        # Save the combined image to a bytes buffer
         buffer = io.BytesIO()
         combined_image.save(buffer, format="PNG")
         self._png_bytes = buffer.getvalue()
+
+        if self._debug:
+            # Save the combined image to a file
+            combined_image.save(self.pdf_path.removesuffix(".pdf") + f".combined.png", format="PNG")
+
         return self._png_bytes
 
     def pdf_to_csv(self) -> str:
@@ -113,7 +128,15 @@ class BankStatement:
             ValueError: If API response is invalid
         """
 
-        prompt = CREDIT_CARD_PROMPT if self.is_credit_card() else BANK_ACCOUNT_PROMPT
-        png_bytes = self.pdf_to_png()
-        result = LLMHelper.prompt(prompt, png_bytes)
+        if self.is_credit_card():
+            prompt = CREDIT_CARD_PROMPT
+            result = LLMHelper.prompt(prompt, [(self.pdf_bytes, "application/pdf")])
+        else:
+            prompt = BANK_ACCOUNT_PROMPT
+            result = LLMHelper.prompt(prompt, self.png_bytes)
+        if self._debug:
+            # Save the result to a file
+            with open(self.pdf_path.removesuffix(".pdf") + ".raw.txt", "w") as f:
+                f.write(result)
+
         return result.removeprefix("```csv").removesuffix("```")
